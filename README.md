@@ -1,10 +1,11 @@
 ## Getting Started
 
-Update the pub/sub/secret keys in `.env.development`
+First, update the pub/sub/secret keys in `.env.development`
 
 Run the development server:
 
 ```bash
+npm i
 npm run dev
 ```
 
