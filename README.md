@@ -1,38 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
-First, run the development server:
+Update the pub/sub/secret keys in `.env.development`
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Steps to reproduce 
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+* The server generates two unique tokens and returns them to the client (see `api/token.js`)
+* Using the tokens, the client initializes two Pubnub instances (see `index.js`)
+* A `<User>` component is initialized for each Pubnub client
+* The `<User>` component sets up message/object listeners are joins the `test` channel
+* Click "Send Message" to send a message from the channel from each user
+* Confirm in the console that the message handler fires twice (once for each client)
+* Click "Update Metadata" to update the metadata for each user
+* Confirm in the console that the objects handler does not fire for metadata updates, despite users belonging to the same `test` channel
+* Update `User.js` line 21 to subscribe users to each others channels:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+`pn.subscribe({channels: ['USER_A', 'USER_B']})`
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+* Click "Update Metadata" to update the metadata for each user
+* Confirm that the object now listener fires twice, once for each client
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Expected behavior
 
-## Learn More
+Since both users are subscribed to the `test` channel, they should receive metadata updates from other users in the channel, without having to subscribe to each user's channel.
 
-To learn more about Next.js, take a look at the following resources:
+Relevant docs: https://www.pubnub.com/docs/chat/sdks/users/user-metadata#user-events
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+> User events are triggered when user metadata is set or deleted. Other users can receive these events by subscribing to the user's channel or if they are members of the same channel.
