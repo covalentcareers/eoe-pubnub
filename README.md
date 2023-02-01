@@ -8,12 +8,12 @@ Run the development server:
 npm run dev
 ```
 
-## Steps to reproduce 
+## Context and steps to reproduce 
 
 * The server generates two unique tokens and returns them to the client (see `api/token.js`)
 * Using the tokens, the client initializes two Pubnub instances (see `index.js`)
 * A `<User>` component is initialized for each Pubnub client
-* The `<User>` component sets up message/object listeners are joins the `test` channel
+* The `<User>` component sets up message/object listeners and joins the `test` channel
 * Click "Send Message" to send a message from the channel from each user
 * Confirm in the console that the message handler fires twice (once for each client)
 * Click "Update Metadata" to update the metadata for each user
