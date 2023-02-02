@@ -15,15 +15,12 @@ npm run dev
 * Using the tokens, the client initializes two Pubnub instances (see `index.js`)
 * A `<User>` component is initialized for each Pubnub client
 * The `<User>` component sets up message/object listeners and joins the `test` channel
-* Click "Send Message" to send a message from the channel from each user
+* Click "Send Message" from one of the users to send a message to the 'test' channel
 * Confirm in the console that the message handler fires twice (once for each client)
-* Click "Update Metadata" to update the metadata for each user
+* Click "Update Metadata" for one of the users to update its metadata
 * Confirm in the console that the objects handler does not fire for metadata updates, despite users belonging to the same `test` channel
-* Update `User.js` line 21 to subscribe users to each others channels:
-
-`pn.subscribe({channels: ['USER_A', 'USER_B']})`
-
-* Click "Update Metadata" to update the metadata for each user
+* Update `User.js` line 21 to subscribe each user to each other's channels: `pn.subscribe({channels: ['USER_A', 'USER_B']})`
+* Click "Update Metadata" for one of the users to update its metadata
 * Confirm that the object now listener fires twice, once for each client
 
 ## Expected behavior
